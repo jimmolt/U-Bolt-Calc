@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>U-Bolt Blank Size Calculator</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    color: #222;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 24px 32px 32px;
+  }
+  h1 {
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    color: #666;
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    align-items: flex-end;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #eee;
+    margin-bottom: 20px;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .field label {
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #444;
+  }
+  .field select, .field input {
+    padding: 8px 10px;
+    font-size: 15px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    width: 150px;
+  }
+  .field input#partNumber { width: 200px; }
+  button#printBtn {
+    padding: 10px 22px;
+    font-size: 15px;
+    font-weight: bold;
+    background: #2255aa;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    height: 38px;
+  }
+  button#printBtn:hover { background: #1a4488; }
+  .result-banner {
+    display: flex;
+    gap: 28px;
+    background: #eef3fb;
+    border: 1px solid #cfe0f5;
+    border-radius: 6px;
+    padding: 14px 20px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .result-item .val {
+    font-size: 17px;
+    font-weight: bold;
+    color: #163d73;
+  }
+  .result-item .lbl {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #666;
+    letter-spacing: 0.03em;
+  }
+  .drawing-wrap {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 10px;
+    background: #fafafa;
+  }
+  svg { width: 100%; height: auto; display: block; }
+  .titleblock {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    margin-top: 14px;
+    border: 1px solid #333;
+    font-size: 12px;
+  }
+  .titleblock div {
+    padding: 6px 10px;
+    border-right: 1px solid #333;
+    border-bottom: 1px solid #333;
+  }
+  .titleblock div:last-child { border-right: none; }
+  .titleblock .tb-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    color: #666;
+    display: block;
+  }
+  .titleblock .tb-val {
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .container { border: none; padding: 0; max-width: 100%; }
+    .controls, button#printBtn { display: none; }
+    .drawing-wrap { border: none; padding: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>U-Bolt Blank Size Calculator</h1>
+  <div class="subtitle">Square U-Bolt Blank Size Calculator</div>
+
+  <div class="controls">
+    <div class="field">
+      <label for="diameter">Diameter</label>
+      <select id="diameter">
+        <option value="0.25">1/4 (.250)</option>
+        <option value="0.3125">5/16 (.3125)</option>
+        <option value="0.375">3/8 (.375)</option>
+        <option value="0.4375">7/16 (.4375)</option>
+        <option value="0.5" selected>1/2 (.500)</option>
+        <option value="0.5625">9/16 (.5625)</option>
+        <option value="0.625">5/8 (.625)</option>
+        <option value="0.75">3/4 (.750)</option>
+        <option value="0.875">7/8 (.875)</option>
+        <option value="1">1 (1.000)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="dimA">A dimension (spacing)</label>
+      <input type="number" id="dimA" value="4.000" step="0.001">
+    </div>
+    <div class="field">
+      <label for="dimB">B dimension (leg length)</label>
+      <input type="number" id="dimB" value="6.000" step="0.001">
+    </div>
+    <div class="field">
+      <label for="partNumber">Customer</label>
+      <input type="text" id="partNumber" value="">
+    </div>
+    <div class="field">
+      <label for="quantity">Quantity</label>
+      <input type="number" id="quantity" value="1" min="1" step="1" style="width: 100px;">
+    </div>
+    <button id="printBtn" onclick="window.print()">Print Drawing</button>
+  </div>
+
+  <div class="result-banner">
+    <div class="result-item">
+      <div class="val" id="outBlank">--</div>
+      <div class="lbl">Blank Size</div>
+    </div>
+    <div class="result-item">
+      <div class="val" id="outDia">--</div>
+      <div class="lbl">Diameter</div>
+    </div>
+    <div class="result-item">
+      <div class="val" id="outA">--</div>
+      <div class="lbl">A Dimension</div>
+    </div>
+    <div class="result-item">
+      <div class="val" id="outB">--</div>
+      <div class="lbl">B Dimension</div>
+    </div>
+  </div>
+
+  <div class="drawing-wrap">
+    <svg id="dwg" viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+
+  <div class="titleblock">
+    <div><span class="tb-label">Customer</span><span class="tb-val" id="tbPart">--</span></div>
+    <div><span class="tb-label">Quantity</span><span class="tb-val" id="tbQty">--</span></div>
+    <div><span class="tb-label">Material Diameter</span><span class="tb-val" id="tbDia">--</span></div>
+    <div><span class="tb-label">Blank (Cut) Length</span><span class="tb-val" id="tbBlank">--</span></div>
+    <div><span class="tb-label">Date</span><span class="tb-val" id="tbDate">--</span></div>
+  </div>
+</div>
+
+<script>
+function fmt(n){
+  if (isNaN(n)) return "--";
+  return (Math.round(n*10000)/10000).toString().replace(/(\.\d*?)0+$/,'$1').replace(/\.$/,'');
+}
+
+function toFraction(n, denom){
+  denom = denom || 16;
+  if (isNaN(n)) return "--";
+  const whole = Math.floor(n);
+  let frac = n - whole;
+  let num = Math.round(frac * denom);
+  let d = denom;
+  if (num === 0) return whole.toString();
+  if (num === d) return (whole+1).toString();
+  while (num % 2 === 0 && d % 2 === 0){ num/=2; d/=2; }
+  return (whole > 0 ? whole + " " : "") + num + "/" + d;
+}
+
+function fmtFull(n, denom){
+  if (isNaN(n)) return "--";
+  return toFraction(n, denom) + '"';
+}
+
+function draw(){
+  const d = parseFloat(document.getElementById('diameter').value);
+  const A = parseFloat(document.getElementById('dimA').value) || 0;
+  const B = parseFloat(document.getElementById('dimB').value) || 0;
+  const part = document.getElementById('partNumber').value || '--';
+  const qty = document.getElementById('quantity').value || '--';
+
+  const blank = B + B + A + (0.5 * d);
+
+  document.getElementById('outBlank').textContent = toFraction(blank, 64) + '"';
+  document.getElementById('outDia').textContent = fmtFull(d, 64);
+  document.getElementById('outA').textContent = fmtFull(A, 64);
+  document.getElementById('outB').textContent = fmtFull(B, 64);
+  document.getElementById('tbPart').textContent = part;
+  document.getElementById('tbQty').textContent = qty;
+  document.getElementById('tbDia').textContent = fmtFull(d, 64) + ' DIA';
+  document.getElementById('tbBlank').textContent = toFraction(blank, 64) + '"';
+  document.getElementById('tbDate').textContent = new Date().toLocaleDateString();
+
+  // --- Build the U-bolt drawing ---
+  // Layout: legs go up from a semicircular bend at bottom.
+  const svgNS = "http://www.w3.org/2000/svg";
+  const svg = document.getElementById('dwg');
+  svg.innerHTML = '';
+
+  const cx = 450;          // center x
+  const legTopY = 90;      // top of legs (y, drawing top)
+  const strokeW = Math.max(6, Math.min(16, d*20));
+
+  // scale the inside spacing 'A' visually (not to exact real scale, but proportionate)
+  const visA = Math.max(80, Math.min(220, A*25));
+  const visLegLen = Math.max(140, Math.min(280, B*22));
+  const bendY = legTopY + visLegLen;      // y where straight leg ends / 90-deg bend begins
+  const cornerR = Math.max(4, strokeW*0.35); // small corner radius, square u-bolt = sharp-ish corners
+  const bottomY = bendY;
+
+  const halfA = visA/2;
+  const leftX = cx - halfA;
+  const rightX = cx + halfA;
+
+  function line(x1,y1,x2,y2,extra){
+    return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#111" stroke-width="${strokeW}" stroke-linecap="butt" ${extra||''}/>`;
+  }
+
+  let html = '';
+
+  // legs (straight vertical sections), stopping short of corner to leave room for rounded corner arcs
+  html += line(leftX, legTopY, leftX, bendY - cornerR);
+  html += line(rightX, legTopY, rightX, bendY - cornerR);
+  // bottom straight span (between the two 90-degree corners)
+  html += line(leftX + cornerR, bendY, rightX - cornerR, bendY);
+  // square corners with a slight bend radius (typical of formed square U-bolts)
+  html += `<path d="M ${leftX} ${bendY - cornerR} A ${cornerR} ${cornerR} 0 0 0 ${leftX + cornerR} ${bendY}" fill="none" stroke="#111" stroke-width="${strokeW}" stroke-linecap="round"/>`;
+  html += `<path d="M ${rightX - cornerR} ${bendY} A ${cornerR} ${cornerR} 0 0 0 ${rightX} ${bendY - cornerR}" fill="none" stroke="#111" stroke-width="${strokeW}" stroke-linecap="round"/>`;
+
+  // bend point markers (where straight leg meets the corner, i.e. the B dimension endpoint)
+  html += `<circle cx="${leftX}" cy="${bendY}" r="4" fill="#c0392b"/>`;
+  html += `<circle cx="${rightX}" cy="${bendY}" r="4" fill="#c0392b"/>`;
+
+  // --- Dimension lines ---
+  const dimColor = "#2255aa";
+  const extLeft = leftX - 40;
+  const extRight = rightX + 40;
+
+  // A dimension (spacing between legs), at top
+  html += `<line x1="${leftX}" y1="${legTopY-20}" x2="${leftX}" y2="${legTopY-45}" stroke="${dimColor}" stroke-width="1"/>`;
+  html += `<line x1="${rightX}" y1="${legTopY-20}" x2="${rightX}" y2="${legTopY-45}" stroke="${dimColor}" stroke-width="1"/>`;
+  html += `<line x1="${leftX}" y1="${legTopY-35}" x2="${rightX}" y2="${legTopY-35}" stroke="${dimColor}" stroke-width="1" marker-start="url(#adL)" marker-end="url(#adR)"/>`;
+  html += `<text x="${cx}" y="${legTopY-42}" text-anchor="middle" font-size="15" font-weight="bold" fill="${dimColor}">A = ${toFraction(A,64)}"</text>`;
+
+  // B dimension (leg length) on left side, from bend point to top
+  html += `<line x1="${extLeft}" y1="${legTopY}" x2="${leftX-15}" y2="${legTopY}" stroke="${dimColor}" stroke-width="1"/>`;
+  html += `<line x1="${extLeft}" y1="${bendY}" x2="${leftX-15}" y2="${bendY}" stroke="${dimColor}" stroke-width="1"/>`;
+  html += `<line x1="${extLeft}" y1="${legTopY}" x2="${extLeft}" y2="${bendY}" stroke="${dimColor}" stroke-width="1" marker-start="url(#adL)" marker-end="url(#adR)"/>`;
+  html += `<text x="${extLeft-8}" y="${(legTopY+bendY)/2}" text-anchor="end" font-size="15" font-weight="bold" fill="${dimColor}">B = ${toFraction(B,64)}"</text>`;
+
+  // right side duplicate B label small note
+  html += `<line x1="${extRight}" y1="${legTopY}" x2="${rightX+15}" y2="${legTopY}" stroke="${dimColor}" stroke-width="1"/>`;
+  html += `<line x1="${extRight}" y1="${bendY}" x2="${rightX+15}" y2="${bendY}" stroke="${dimColor}" stroke-width="1"/>`;
+  html += `<line x1="${extRight}" y1="${legTopY}" x2="${extRight}" y2="${bendY}" stroke="${dimColor}" stroke-width="1" marker-start="url(#adL)" marker-end="url(#adR)"/>`;
+  html += `<text x="${extRight+8}" y="${(legTopY+bendY)/2}" text-anchor="start" font-size="15" font-weight="bold" fill="${dimColor}">B = ${toFraction(B,64)}"</text>`;
+
+  html += `<text x="${cx}" y="${bottomY+30}" text-anchor="middle" font-size="11" fill="#666">bend point marked in red at each B dimension end</text>`;
+
+  // diameter callout near bottom
+  html += `<text x="${cx}" y="${bottomY+55}" text-anchor="middle" font-size="14" font-weight="bold" fill="#111">Material Diameter: ${toFraction(d,64)}"</text>`;
+
+  // blank size summary (no formula shown)
+  html += `<text x="${cx}" y="${bottomY+80}" text-anchor="middle" font-size="16" font-weight="bold" fill="#c0392b">Blank Size: ${toFraction(blank,64)}"</text>`;
+
+  // arrow marker defs
+  const defs = `<defs>
+    <marker id="adL" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M8,1 L1,4 L8,7" fill="none" stroke="${dimColor}" stroke-width="1"/>
+    </marker>
+    <marker id="adR" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,1 L7,4 L0,7" fill="none" stroke="${dimColor}" stroke-width="1"/>
+    </marker>
+  </defs>`;
+
+  svg.setAttribute('viewBox', `0 0 900 ${bottomY+100}`);
+  svg.innerHTML = defs + html;
+}
+
+document.getElementById('diameter').addEventListener('change', draw);
+document.getElementById('dimA').addEventListener('input', draw);
+document.getElementById('dimB').addEventListener('input', draw);
+document.getElementById('partNumber').addEventListener('input', draw);
+document.getElementById('quantity').addEventListener('input', draw);
+
+draw();
+</script>
+</body>
+</html>
