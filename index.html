@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>U-Bolt Blank Size Calculator</title>
 <style>
   * { box-sizing: border-box; }
@@ -128,6 +129,19 @@
     .container { border: none; padding: 0; max-width: 100%; }
     .controls, button#printBtn { display: none; }
     .drawing-wrap { border: none; padding: 0; }
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 10px; }
+    .container { padding: 16px 14px 20px; border-radius: 10px; }
+    h1 { font-size: 19px; }
+    .controls { flex-direction: column; align-items: stretch; gap: 14px; }
+    .field { width: 100%; }
+    .field select, .field input, .field input#partNumber { width: 100%; font-size: 16px; padding: 12px 10px; }
+    button#printBtn { width: 100%; height: 48px; font-size: 16px; }
+    .result-banner { gap: 16px 24px; padding: 14px; }
+    .result-item .val { font-size: 16px; }
+    .titleblock { grid-template-columns: repeat(2, 1fr); font-size: 11px; }
   }
 </style>
 </head>
