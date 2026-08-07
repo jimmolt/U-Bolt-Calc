@@ -4,151 +4,239 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>U-Bolt Blank Size Calculator</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23f4f1ea'/%3E%3Cpath d='M120,50 L120,220 Q120,250 150,250 L250,250 Q280,250 280,220 L280,50' fill='none' stroke='%233a3530' stroke-width='26' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <style>
+  :root {
+    --ink: #1b1f27;
+    --paper: #efece3;
+    --card: #fffefb;
+    --line: #ddd7c7;
+    --accent: #d98e2b;
+    --accent-deep: #a8691a;
+    --readout-bg: #171b21;
+    --readout-text: #ffa733;
+    --muted: #6b7280;
+    --danger: #b8402c;
+  }
   * { box-sizing: border-box; }
+  html, body { height: 100%; }
   body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f4f4f4;
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, Helvetica, sans-serif;
+    background-color: var(--paper);
+    background-image:
+      radial-gradient(circle, rgba(27,31,39,0.07) 1px, transparent 1px);
+    background-size: 22px 22px;
     margin: 0;
-    padding: 20px;
-    color: #222;
+    padding: 32px 20px;
+    color: var(--ink);
   }
   .container {
-    max-width: 900px;
+    max-width: 920px;
     margin: 0 auto;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 24px 32px 32px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: 0 1px 2px rgba(27,31,39,0.04), 0 12px 32px -12px rgba(27,31,39,0.18);
+    overflow: hidden;
+  }
+  .app-header {
+    background: var(--ink);
+    color: #f4f1e9;
+    padding: 22px 32px 20px;
+    border-bottom: 3px solid var(--accent);
+    position: relative;
+  }
+  .app-header .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
   }
   h1 {
-    font-size: 22px;
-    margin-bottom: 4px;
+    font-size: 23px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    margin: 0;
   }
   .subtitle {
-    color: #666;
+    color: #b9b3a3;
     font-size: 13px;
-    margin-bottom: 20px;
+    margin-top: 4px;
   }
+  .body-pad { padding: 26px 32px 32px; }
   .controls {
     display: flex;
     flex-wrap: wrap;
-    gap: 18px;
+    gap: 18px 22px;
     align-items: flex-end;
-    padding-bottom: 16px;
-    border-bottom: 2px solid #eee;
-    margin-bottom: 20px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 22px;
   }
   .field {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 5px;
   }
   .field label {
-    font-size: 12px;
-    font-weight: bold;
+    font-size: 11px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.03em;
-    color: #444;
+    letter-spacing: 0.06em;
+    color: var(--muted);
   }
   .field select, .field input {
-    padding: 8px 10px;
+    padding: 9px 11px;
     font-size: 15px;
-    border: 1px solid #bbb;
-    border-radius: 4px;
+    font-variant-numeric: tabular-nums;
+    border: 1px solid #c9c2ae;
+    background: #fffefc;
+    border-radius: 5px;
     width: 150px;
+    color: var(--ink);
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .field select:focus, .field input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(217,142,43,0.18);
   }
   .field input#partNumber { width: 200px; }
   button#printBtn {
-    padding: 10px 22px;
-    font-size: 15px;
-    font-weight: bold;
-    background: #2255aa;
+    padding: 11px 24px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    background: var(--ink);
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
-    height: 38px;
+    height: 40px;
+    transition: background .15s ease, transform .05s ease;
   }
-  button#printBtn:hover { background: #1a4488; }
+  button#printBtn:hover { background: var(--accent-deep); }
+  button#printBtn:active { transform: translateY(1px); }
+
   .result-banner {
     display: flex;
-    gap: 28px;
-    background: #eef3fb;
-    border: 1px solid #cfe0f5;
-    border-radius: 6px;
-    padding: 14px 20px;
-    margin-bottom: 24px;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--ink);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 26px;
     flex-wrap: wrap;
   }
+  .result-item {
+    flex: 1 1 140px;
+    background: var(--readout-bg);
+    padding: 14px 18px 12px;
+  }
+  .result-item.primary { background: #12151a; }
   .result-item .val {
-    font-size: 17px;
-    font-weight: bold;
-    color: #163d73;
+    font-family: "SF Mono", "Courier New", Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--readout-text);
+    letter-spacing: 0.01em;
   }
+  .result-item.primary .val { font-size: 24px; color: #ffb14d; }
   .result-item .lbl {
-    font-size: 11px;
+    font-size: 10px;
     text-transform: uppercase;
-    color: #666;
-    letter-spacing: 0.03em;
+    color: #c7cbd4;
+    letter-spacing: 0.08em;
+    margin-top: 3px;
+    font-weight: 600;
   }
+
   .drawing-wrap {
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 10px;
-    background: #fafafa;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 14px;
+    background-color: #fbfaf6;
+    background-image:
+      linear-gradient(rgba(27,31,39,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(27,31,39,0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+    position: relative;
   }
   svg { width: 100%; height: auto; display: block; }
+
   .titleblock {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 0;
-    margin-top: 14px;
-    border: 1px solid #333;
+    margin-top: 16px;
+    border: 1.5px solid var(--ink);
+    border-radius: 6px;
+    overflow: hidden;
     font-size: 12px;
   }
   .titleblock div {
-    padding: 6px 10px;
-    border-right: 1px solid #333;
-    border-bottom: 1px solid #333;
+    padding: 8px 12px;
+    border-right: 1px solid #cfc9b8;
+    border-bottom: 1px solid #cfc9b8;
+    background: #fffefc;
   }
-  .titleblock div:last-child { border-right: none; }
+  .titleblock div:nth-child(4n) { border-right: none; }
   .titleblock .tb-label {
     font-size: 9px;
+    font-weight: 700;
     text-transform: uppercase;
-    color: #666;
+    letter-spacing: 0.06em;
+    color: var(--muted);
     display: block;
   }
   .titleblock .tb-val {
-    font-weight: bold;
+    font-weight: 700;
     font-size: 14px;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
   }
 
   @media print {
     body { background: #fff; padding: 0; }
-    .container { border: none; padding: 0; max-width: 100%; }
-    .controls, button#printBtn { display: none; }
-    .drawing-wrap { border: none; padding: 0; }
+    .container { border: none; box-shadow: none; border-radius: 0; }
+    .app-header, .controls, button#printBtn { display: none; }
+    .body-pad { padding: 0; }
+    .drawing-wrap { border: none; padding: 0; background-image: none; background-color: #fff; }
+    .result-banner { border-color: #333; }
+    .result-item, .result-item.primary { background: #fff; }
+    .result-item .val, .result-item.primary .val { color: var(--ink); }
+    .result-item .lbl { color: #555; }
   }
 
   @media (max-width: 640px) {
-    body { padding: 10px; }
-    .container { padding: 16px 14px 20px; border-radius: 10px; }
+    body { padding: 12px; }
+    .app-header { padding: 18px 18px 16px; }
+    .body-pad { padding: 18px 16px 24px; }
     h1 { font-size: 19px; }
     .controls { flex-direction: column; align-items: stretch; gap: 14px; }
     .field { width: 100%; }
     .field select, .field input, .field input#partNumber { width: 100%; font-size: 16px; padding: 12px 10px; }
-    button#printBtn { width: 100%; height: 48px; font-size: 16px; }
-    .result-banner { gap: 16px 24px; padding: 14px; }
-    .result-item .val { font-size: 16px; }
+    button#printBtn { width: 100%; height: 48px; font-size: 15px; }
+    .result-item { flex: 1 1 45%; }
+    .result-item.primary { flex-basis: 100%; }
     .titleblock { grid-template-columns: repeat(2, 1fr); font-size: 11px; }
+    .titleblock div:nth-child(4n) { border-right: 1px solid #cfc9b8; }
+    .titleblock div:nth-child(2n) { border-right: none; }
   }
 </style>
 </head>
 <body>
 <div class="container">
-  <h1>U-Bolt Blank Size Calculator</h1>
-  <div class="subtitle">Square U-Bolt Blank Size Calculator</div>
+  <div class="app-header">
+    <div class="eyebrow">Shop Drawing &middot; Fabrication Reference</div>
+    <h1>Square U-Bolt Blank Size Calculator</h1>
+    <div class="subtitle">Blank length, thread callout, and a print-ready bend drawing</div>
+  </div>
+  <div class="body-pad">
 
   <div class="controls">
     <div class="field">
@@ -175,6 +263,35 @@
       <input type="number" id="dimB" value="6.000" step="0.001" data-default="6.000">
     </div>
     <div class="field">
+      <label for="threadDesig">Thread Designation</label>
+      <select id="threadDesig">
+        <option value="1/4-20 Coarse">1/4-20 Coarse</option>
+        <option value="1/4-28 Fine">1/4-28 Fine</option>
+        <option value="5/16-18 Coarse">5/16-18 Coarse</option>
+        <option value="5/16-24 Fine">5/16-24 Fine</option>
+        <option value="3/8-16 Coarse">3/8-16 Coarse</option>
+        <option value="3/8-24 Fine">3/8-24 Fine</option>
+        <option value="7/16-14 Coarse">7/16-14 Coarse</option>
+        <option value="7/16-20 Fine">7/16-20 Fine</option>
+        <option value="1/2-13 Coarse" selected>1/2-13 Coarse</option>
+        <option value="1/2-20 Fine">1/2-20 Fine</option>
+        <option value="9/16-12 Coarse">9/16-12 Coarse</option>
+        <option value="9/16-18 Fine">9/16-18 Fine</option>
+        <option value="5/8-11 Coarse">5/8-11 Coarse</option>
+        <option value="5/8-18 Fine">5/8-18 Fine</option>
+        <option value="3/4-10 Coarse">3/4-10 Coarse</option>
+        <option value="3/4-16 Fine">3/4-16 Fine</option>
+        <option value="7/8-9 Coarse">7/8-9 Coarse</option>
+        <option value="7/8-14 Fine">7/8-14 Fine</option>
+        <option value="1-8 Coarse">1-8 Coarse</option>
+        <option value="1-14 Fine">1-14 Fine</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="threadLength">Thread Length</label>
+      <input type="number" id="threadLength" value="2.000" step="0.001" data-default="2.000">
+    </div>
+    <div class="field">
       <label for="partNumber">Customer</label>
       <input type="text" id="partNumber" value="">
     </div>
@@ -186,7 +303,7 @@
   </div>
 
   <div class="result-banner">
-    <div class="result-item">
+    <div class="result-item primary">
       <div class="val" id="outBlank">--</div>
       <div class="lbl">Blank Size</div>
     </div>
@@ -213,7 +330,10 @@
     <div><span class="tb-label">Quantity</span><span class="tb-val" id="tbQty">--</span></div>
     <div><span class="tb-label">Material Diameter</span><span class="tb-val" id="tbDia">--</span></div>
     <div><span class="tb-label">Blank (Cut) Length</span><span class="tb-val" id="tbBlank">--</span></div>
+    <div><span class="tb-label">Thread Designation</span><span class="tb-val" id="tbThread">--</span></div>
+    <div><span class="tb-label">Thread Length</span><span class="tb-val" id="tbThreadLen">--</span></div>
     <div><span class="tb-label">Date</span><span class="tb-val" id="tbDate">--</span></div>
+  </div>
   </div>
 </div>
 
@@ -247,6 +367,8 @@ function draw(){
   const B = parseFloat(document.getElementById('dimB').value) || 0;
   const part = document.getElementById('partNumber').value || '--';
   const qty = document.getElementById('quantity').value || '--';
+  const thread = document.getElementById('threadDesig').value || '--';
+  const threadLen = document.getElementById('threadLength').value;
 
   const blank = B + B + A + (0.5 * d);
 
@@ -256,6 +378,8 @@ function draw(){
   document.getElementById('outB').textContent = fmtFull(B, 64);
   document.getElementById('tbPart').textContent = part;
   document.getElementById('tbQty').textContent = qty;
+  document.getElementById('tbThread').textContent = thread;
+  document.getElementById('tbThreadLen').textContent = threadLen ? toFraction(parseFloat(threadLen),64) + '"' : '--';
   document.getElementById('tbDia').textContent = fmtFull(d, 64) + ' DIA';
   document.getElementById('tbBlank').textContent = toFraction(blank, 64) + '"';
   document.getElementById('tbDate').textContent = new Date().toLocaleDateString();
@@ -301,7 +425,7 @@ function draw(){
   html += `<circle cx="${rightX}" cy="${bendY}" r="4" fill="#c0392b"/>`;
 
   // --- Dimension lines ---
-  const dimColor = "#2255aa";
+  const dimColor = "#a8691a";
   const extLeft = leftX - 40;
   const extRight = rightX + 40;
 
@@ -331,6 +455,12 @@ function draw(){
   // blank size summary (no formula shown)
   html += `<text x="${cx}" y="${bottomY+80}" text-anchor="middle" font-size="16" font-weight="bold" fill="#c0392b">Blank Size: ${toFraction(blank,64)}"</text>`;
 
+  // thread callout
+  if (thread !== '--' || threadLen) {
+    const threadTxt = (thread !== '--' ? thread : '') + (threadLen ? '  x  ' + toFraction(parseFloat(threadLen),64) + '" Thread Length' : '');
+    html += `<text x="${cx}" y="${bottomY+100}" text-anchor="middle" font-size="13" font-weight="bold" fill="#111">${threadTxt}</text>`;
+  }
+
   // arrow marker defs
   const defs = `<defs>
     <marker id="adL" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
@@ -341,7 +471,7 @@ function draw(){
     </marker>
   </defs>`;
 
-  svg.setAttribute('viewBox', `0 0 900 ${bottomY+100}`);
+  svg.setAttribute('viewBox', `0 0 900 ${bottomY+130}`);
   svg.innerHTML = defs + html;
 }
 
@@ -350,7 +480,7 @@ document.getElementById('dimA').addEventListener('input', draw);
 document.getElementById('dimB').addEventListener('input', draw);
 
 // Clear the default value the first time the user focuses A or B, so they can type fresh
-[document.getElementById('dimA'), document.getElementById('dimB')].forEach(function(el){
+[document.getElementById('dimA'), document.getElementById('dimB'), document.getElementById('threadLength')].forEach(function(el){
   el.addEventListener('focus', function(){
     if (this.value === this.dataset.default) {
       this.value = '';
@@ -365,6 +495,8 @@ document.getElementById('dimB').addEventListener('input', draw);
 });
 document.getElementById('partNumber').addEventListener('input', draw);
 document.getElementById('quantity').addEventListener('input', draw);
+document.getElementById('threadDesig').addEventListener('change', draw);
+document.getElementById('threadLength').addEventListener('input', draw);
 
 draw();
 </script>
